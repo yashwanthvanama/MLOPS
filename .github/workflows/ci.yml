@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10', '3.11', '3.12']
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run model training
+      run: |
+        python flower_classifier.py
+
+    - name: Organize artifacts
+      run: |
+        mkdir -p artifacts
+        mv flower_classifier_model.pkl artifacts/
+        mv metrics.json artifacts/
+
+    - name: Verify artifacts
+      run: |
+        test -f artifacts/flower_classifier_model.pkl
+        test -f artifacts/metrics.json
+        cat artifacts/metrics.json
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: model-artifacts-python-${{ matrix.python-version }}
+        path: artifacts/
