@@ -39,3 +39,5 @@ htmlcov/
 artifacts/
 *.pkl
 metrics.json
+
+/data/iris_dataset.csv

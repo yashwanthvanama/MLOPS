@@ -1,3 +1,5 @@
 scikit-learn
 numpy
 flask
+pandas
+dvc[s3]
