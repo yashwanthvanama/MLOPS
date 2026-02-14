@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  flower-classifier:
+    build: .
+    ports:
+      - "5001:5001"
+    container_name: flower-classifier-api
+    restart: unless-stopped
