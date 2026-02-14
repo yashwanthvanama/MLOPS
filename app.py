@@ -36,17 +36,20 @@ def predict():
         if not data:
             return jsonify({'error': 'No input data provided'}), 400
         
-        features = [
-            data.get('sepal_length'),
-            data.get('sepal_width'),
-            data.get('petal_length'),
-            data.get('petal_width')
-        ]
-        
-        if None in features:
+        if isinstance(data, list):
+            features = data
+        elif isinstance(data, dict) and 'features' in data:
+            features = data['features']
+        else:
             return jsonify({
-                'error': 'Missing required features',
-                'required': feature_names
+                'error': 'Invalid input format',
+                'expected': 'List of 4 features or {"features": [...]}'
+            }), 400
+        
+        if len(features) != 4:
+            return jsonify({
+                'error': f'Expected 4 features, got {len(features)}',
+                'features_order': feature_names
             }), 400
         
         input_data = np.array([features])
@@ -69,4 +72,4 @@ def predict():
 
 if __name__ == '__main__':
     load_model()
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5001)
