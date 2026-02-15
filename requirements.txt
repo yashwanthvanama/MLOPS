@@ -3,3 +3,4 @@ numpy
 flask
 pandas
 dvc[s3]
+mlflow
