@@ -18,6 +18,9 @@ def load_model():
     else:
         print(f"Warning: Model file not found at {model_path}")
 
+# Load model when module is imported (works with Gunicorn)
+load_model()
+
 @app.route('/health', methods=['GET'])
 def health():
     return jsonify({
